@@ -17,7 +17,7 @@ from auth.utils import (
 )
 from deps import get_current_user
 
-politburo = []
+politburo_arr = []
 SQLALCHEMY_DATABASE_URL = "sqlite:///./DataBase/sql_troyki.db"
 
 engine = create_engine(
@@ -79,7 +79,7 @@ async def login_user(form_data: Login_Data):
 @app.get("/slave")
 def getSlaves():
     slaves = db.query(GodSlaveModel).all()
-    return {"RabOfGod[]": slaves}
+    return {"RabOfGod": slaves}
 @app.patch("/slave/{id}")
 def patchSlaveByID(id: int, slave: RabOfGod):
     slaveModel = db.get(GodSlaveModel, id)
@@ -122,7 +122,7 @@ def getSentenceByID(id: int):
 @app.get("/sentence")
 def getSentences():
     sentences = db.query(SentenceModel).all()
-    return {"Sentence[]": sentences}
+    return {"Sentence": sentences}
 
 @app.delete("/sentence/{id}")
 def deleteSentenceByID(id: int):
@@ -142,14 +142,14 @@ def get_me(user: RabOfGod = Depends(get_current_user)):
 @app.post('/politburo')
 def politburo(text: str, user: RabOfGod = Depends(get_current_user)):
     if not user.ifTrockist:
-        politburo.append(text + " " + user.login)
+        politburo_arr.append(text + " " + user.login)
         return {"message": "sucessful done smth with politburo"}
     else:
         return {"message": "ААААААА ТРОЦКИСТЫЫЫЫ!!!!!"}
 @app.get('/politburo')
 def politburo(user: RabOfGod = Depends(get_current_user)):
     if not user.ifTrockist:
-        return politburo
+        return politburo_arr
     else:
         return {"message": "ААААААА ТРОЦКИСТЫЫЫЫ!!!!!"}
 
